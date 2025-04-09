@@ -63,7 +63,7 @@ Benefits:
   
   - `bnb_config`: for 4-bit quantization
   - `peft_config`: to control LoRA rank, dropout, etc.
-  - 
+    
 - Inference script compares:
   
   - **Base LLaMA output** (un-fine-tuned)
