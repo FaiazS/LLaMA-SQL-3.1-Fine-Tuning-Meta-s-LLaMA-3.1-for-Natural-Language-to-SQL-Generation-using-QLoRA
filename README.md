@@ -33,19 +33,42 @@ A hands-on project where I fine-tuned Meta’s LLaMA 3.1 using **LoRA (Low-Rank 
 | Platform        | Local GPU / Google Colab (CUDA enabled)  |
 
 ---
-
-
 ---
 ## 🧠 What is LoRA?
 
 **LoRA (Low-Rank Adaptation)** enables efficient fine-tuning of large models by freezing most of the base parameters and only training small, low-rank matrices.
+
+This drastically reduces:
+
+- Memory usage 🚀
+- Training time ⏱️
+- Hardware requirements 💻
+
+Perfect for fine-tuning LLMs on consumer-grade GPUs!
 
 Benefits:
 
 - ✅ Reduce training time and memory usage drastically  
 - ✅ Avoid catastrophic forgetting by preserving base weights  
 - ✅ Easy to plug-and-play on top of pretrained LLMs
+---
 
+## 🏗️ Implementation Highlights
+
+- Adapted **LLaMA 3.1** for SQL-to-text inference using **LoRA adapters**
+  
+- Used **Alpaca-style formatting** for prompting the model with schema + SQL prompt
+  
+- Fine-tuned model with:
+  
+  - `bnb_config`: for 4-bit quantization
+  - `peft_config`: to control LoRA rank, dropout, etc.
+  - 
+- Inference script compares:
+  
+  - **Base LLaMA output** (un-fine-tuned)
+  - **LoRA-adapted LLaMA output** (fine-tuned)
+---
 ---
 
 ## 📚 Dataset Format (Alpaca-Style)
