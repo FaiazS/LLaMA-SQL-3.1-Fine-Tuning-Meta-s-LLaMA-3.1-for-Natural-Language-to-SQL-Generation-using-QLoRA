@@ -33,3 +33,74 @@ A hands-on project where I fine-tuned Meta’s LLaMA 3.1 using **LoRA (Low-Rank 
 | Platform        | Local GPU / Google Colab (CUDA enabled)  |
 
 ---
+
+
+---
+## 🧠 What is LoRA?
+
+**LoRA (Low-Rank Adaptation)** enables efficient fine-tuning of large models by freezing most of the base parameters and only training small, low-rank matrices.
+
+Benefits:
+
+- ✅ Reduce training time and memory usage drastically  
+- ✅ Avoid catastrophic forgetting by preserving base weights  
+- ✅ Easy to plug-and-play on top of pretrained LLMs
+
+---
+
+## 📚 Dataset Format (Alpaca-Style)
+
+Each sample contains:
+
+- `instruction`: Table schema and content
+- `input`: Natural language SQL query
+- `output`: Ground truth SQL query
+- `explanation`: Why the SQL query works
+
+```json
+{
+  "instruction": "Company database: CREATE TABLE Patients(...);",
+  "input": "SQL Prompt: How many patients have each diagnosis?",
+  "output": "SELECT Diagnosis, COUNT(*) FROM Patients GROUP BY Diagnosis;",
+  "explanation": "Group by diagnosis to count patients per category."
+}
+
+⚙️ How to Fine-Tune
+
+Run the fine-tuning script with your dataset:
+
+python finetune_lora.py \
+  --base_model ./llama-3.1 \
+  --dataset_path ./data/alpaca_sql_dataset.json \
+  --output_dir ./checkpoints/lora-finetuned-llama \
+  --batch_size 4 \
+  --lora_r 8 \
+  --lora_alpha 16 \
+  --lora_dropout 0.1 \
+  --num_epochs 3 \
+  --cutoff_len 512
+
+🔎 Inference & Evaluation
+
+After training, compare base vs fine-tuned model performance:
+
+python inference_compare.py
+This script:
+
+Loads both models
+
+Formats input into SQL prompt structure
+
+Runs .generate() on each model
+
+Compares decoded outputs side by side
+
+✅ Evaluation Results (Sample)
+
+Prompt	Base LLaMA Output	Fine-Tuned Output
+
+Patients table: count by diagnosis	Irrelevant or generic response	✅ SELECT Diagnosis, COUNT(*) ... GROUP BY ...
+
+Orders table: total per customer	Missed aggregation logic	✅ Correct SQL with GROUP BY CustomerID
+
+Transactions table: open-ended	Confused or verbose	✅ Concise, structured response
